@@ -1,0 +1,39 @@
+version: '3.7'
+
+x-var: &keymap
+    default
+x-var: &hex
+    ergodox_ez_default
+
+services:
+    qmk_firmware:
+        build:
+            context: .
+            dockerfile: ./.docker/qmk_firmware/Dockerfile
+        environment:
+            KEYBOARD: ergodox_ez
+            KEYMAP: *keymap
+        volumes:
+          - qmk_firmware-data:/qmk_firmware
+          - qmk-build-data:/qmk_firmware/.build
+          - ./custom:/qmk_firmware/keyboards/ergodox_ez/keymaps/custom
+
+    teensy_loader:
+        build:
+            context: .
+            dockerfile: ./.docker/teensy_loader/Dockerfile
+        depends_on:
+          - qmk_firmware
+        privileged: true
+        environment:
+            mcu: atmega32u4
+            hex: *hex
+        volumes:
+          - /dev/bus/usb:/dev/bus/usb
+          - qmk-build-data:/qmk_firmware/.build
+
+volumes:
+    qmk_firmware-data:
+        driver: local
+    qmk-build-data:
+        driver: local
