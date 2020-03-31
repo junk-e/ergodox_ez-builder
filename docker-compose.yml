@@ -1,9 +1,9 @@
 version: '3.7'
 
 x-var: &keymap
-    default
+    custom
 x-var: &hex
-    ergodox_ez_default
+    ergodox_ez_custom
 
 services:
     qmk_firmware:
