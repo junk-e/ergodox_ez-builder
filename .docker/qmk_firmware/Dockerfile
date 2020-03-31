@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     gcc \
     gcc-arm-none-eabi \
     gcc-avr \
+    git \
     libnewlib-arm-none-eabi \
     software-properties-common \
     unzip \
@@ -19,10 +20,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /qmk_firmware
-RUN wget https://github.com/qmk/qmk_firmware/archive/master.zip && \
-    unzip -q master.zip && \
-    mv ./qmk_firmware-master/* ./ && \
-    mv ./qmk_firmware-master/.??* ./ && \
-    rmdir ./qmk_firmware-master
+RUN git clone --recursive https://github.com/qmk/qmk_firmware.git .
 
 CMD make $KEYBOARD:$KEYMAP
